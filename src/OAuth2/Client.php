@@ -448,7 +448,12 @@ class Client
             foreach($http_headers as $key => $parsed_urlvalue) {
                 $header[] = "$key: $parsed_urlvalue";
             }
-            $curl_options[CURLOPT_HTTPHEADER] = $header;
+            if ($this->curl_options[CURLOPT_HTTPHEADER]) {
+                $curl_options[CURLOPT_HTTPHEADER] = array_merge($this->curl_options[CURLOPT_HTTPHEADER], $header);
+                unset($this->curl_options[CURLOPT_HTTPHEADER]);
+            } else {
+                $curl_options[CURLOPT_HTTPHEADER] = $header;
+            }
         }
 
         $ch = curl_init();
